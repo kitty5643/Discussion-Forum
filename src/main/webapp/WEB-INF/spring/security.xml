@@ -9,9 +9,9 @@
         http://www.springframework.org/schema/security/spring-security.xsd
 ">
     <http auto-config="true">
-        <intercept-url pattern="/guestbook/edit" access="hasRole('ADMIN')" />
-        <intercept-url pattern="/guestbook/add" access="hasAnyRole('USER','ADMIN')" /> 
-        <intercept-url pattern="/guestbook/**" access="permitAll" /> 
+        <intercept-url pattern="/message/edit" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/message/add" access="hasAnyRole('USER','ADMIN')" /> 
+        <intercept-url pattern="/message/**" access="permitAll" /> 
 
         <form-login login-page="/login"
                         authentication-failure-url="/login?error"

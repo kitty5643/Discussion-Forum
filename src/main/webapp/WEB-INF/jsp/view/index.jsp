@@ -13,9 +13,10 @@
         <h2>Course Discussion Forum Index</h2>
         
         <ul>
-            <li><a href="<c:url value="/guestbook"/>">Lecture</a></li>
-            <li><a href="<c:url value="/guestbook"/>">Lab</a></li>
-            <li><a href="<c:url value="/guestbook"/>">Other</a></li>
+            <li><a href="<c:url value="/message"/>">Lecture</a></li>
+            <li><a href="<c:url value="/message"/>">Lab</a></li>
+            <li><a href="<c:url value="/message"/>">Other</a></li>
+            <li><a href="<c:url value="/login"/>">Login</a></li>
         </ul>
     </body>
 </html>
