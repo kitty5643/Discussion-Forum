@@ -10,7 +10,7 @@ public class IndexController {
     
     @RequestMapping("")
     public View index() {
-        return new RedirectView("/guestbook", true);
+        return new RedirectView("/message", true);
     }
     
     @RequestMapping("login")
