@@ -30,7 +30,7 @@ public class MessageRepositoryImpl implements MessageRepository{
     private final JdbcOperations jdbcOp;
 
     @Autowired
-    public MessageEntryRepositoryImpl(DataSource dataSource) {
+    public MessageRepositoryImpl(DataSource dataSource) {
         this.dataSource = dataSource;
         jdbcOp = new JdbcTemplate(this.dataSource);
     }

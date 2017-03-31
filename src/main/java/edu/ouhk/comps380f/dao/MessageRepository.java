@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Kitty
  */
-public class MessageRepository {
+public interface MessageRepository {
     public void create(Message entry);
     public List<Message> findAll();
     public Message findById(int id);
