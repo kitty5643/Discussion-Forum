@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
  *
  * @author Kitty
  */
-@Repository
+
 public class MessageRepositoryImpl implements MessageRepository{
     
     DataSource dataSource;
