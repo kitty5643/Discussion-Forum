@@ -14,7 +14,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-@RequestMapping("guestbook")
+@RequestMapping("message")
 public class MessageController  {
     @Autowired
     MessageRepository gbEntryRepo; 
@@ -22,7 +22,7 @@ public class MessageController  {
     @RequestMapping(value={"", "view"})
     public String index(ModelMap model) {
         model.addAttribute("entries", gbEntryRepo.findAll());
-        return "GuestBook";
+        return "Message";
     }
     
     @RequestMapping(value="add", method=RequestMethod.GET)
@@ -34,7 +34,7 @@ public class MessageController  {
     public View addCommentHandle(Message entry) {
         entry.setDate(new Date());
         gbEntryRepo.create(entry);
-        return new RedirectView("/guestbook/view", true);
+        return new RedirectView("/message/view", true);
     }
     
     @RequestMapping(value="edit", method=RequestMethod.GET)
@@ -47,7 +47,7 @@ public class MessageController  {
     public View editCommentHandle(Message entry) {
         entry.setDate(new Date());
         gbEntryRepo.update(entry);
-        return new RedirectView("/guestbook/view", true);
+        return new RedirectView("/message/view", true);
     }
     
 }
