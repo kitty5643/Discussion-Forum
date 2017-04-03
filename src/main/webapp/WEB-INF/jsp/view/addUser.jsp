@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Customer Support</title>
+        <title>Course Discussion Forum</title>
     </head>
     <body>
         <c:url var="logoutUrl" value="/logout"/>
