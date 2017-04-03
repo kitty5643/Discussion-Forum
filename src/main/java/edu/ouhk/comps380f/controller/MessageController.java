@@ -21,24 +21,31 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 @RequestMapping("message")
-public class MessageController  {
+public class MessageController {
+
     private volatile long TICKET_ID_SEQUENCE = 1;
     private Map<Long, Message> ticketDatabase = new LinkedHashMap<>();
 
-    @RequestMapping(value = {"", "list"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"list"}, method = RequestMethod.GET)
     public String list(ModelMap model) {
         model.addAttribute("ticketDatabase", ticketDatabase);
         return "list";
     }
 
-    @RequestMapping(value = "view/{ticketId}", method = RequestMethod.GET)
-    public ModelAndView view(@PathVariable("ticketId") long ticketId) {
-        Message ticket = this.ticketDatabase.get(ticketId);
+    @RequestMapping(value = {"", "index"}, method = RequestMethod.GET)
+    public String index(ModelMap model) {
+        // model.addAttribute("ticketDatabase", ticketDatabase);
+        return "index";
+    }
+
+    @RequestMapping(value = "view/{messageId}", method = RequestMethod.GET)
+    public ModelAndView view(@PathVariable("messageId") long messageId) {
+        Message ticket = this.ticketDatabase.get(messageId);
         if (ticket == null) {
-            return new ModelAndView(new RedirectView("/ticket/list", true));
+            return new ModelAndView(new RedirectView("/message/list", true));
         }
         ModelAndView modelAndView = new ModelAndView("view");
-        modelAndView.addObject("ticketId", Long.toString(ticketId));
+        modelAndView.addObject("messageId", Long.toString(messageId));
         modelAndView.addObject("ticket", ticket);
         return modelAndView;
     }
@@ -82,7 +89,7 @@ public class MessageController  {
     @RequestMapping(value = "create", method = RequestMethod.POST)
     public View create(Form form, Principal principal) throws IOException {
         Message ticket = new Message();
-        ticket.setId(this.getNextTicketId());
+        ticket.setId(this.getNextMessageId());
         ticket.setCustomerName(principal.getName());
         ticket.setSubject(form.getSubject());
         ticket.setBody(form.getBody());
@@ -98,20 +105,20 @@ public class MessageController  {
             }
         }
         this.ticketDatabase.put(ticket.getId(), ticket);
-        return new RedirectView("/ticket/view/" + ticket.getId(), true);
+        return new RedirectView("/message/view/" + ticket.getId(), true);
     }
 
-    private synchronized long getNextTicketId() {
+    private synchronized long getNextMessageId() {
         return this.TICKET_ID_SEQUENCE++;
     }
 
     @RequestMapping(
-            value = "/{ticketId}/attachment/{attachment:.+}",
+            value = "/{messageId}/attachment/{attachment:.+}",
             method = RequestMethod.GET
     )
-    public View download(@PathVariable("ticketId") long ticketId,
+    public View download(@PathVariable("messageId") long messageId,
             @PathVariable("attachment") String name) {
-        Message ticket = this.ticketDatabase.get(ticketId);
+        Message ticket = this.ticketDatabase.get(messageId);
         if (ticket != null) {
             Attachment attachment = ticket.getAttachment(name);
             if (attachment != null) {
@@ -119,36 +126,36 @@ public class MessageController  {
                         attachment.getMimeContentType(), attachment.getContents());
             }
         }
-        return new RedirectView("/ticket/list", true);
+        return new RedirectView("/message/list", true);
     }
 
     @RequestMapping(
-            value = "/{ticketId}/delete/{attachment:.+}",
+            value = "/{messageId}/delete/{attachment:.+}",
             method = RequestMethod.GET
     )
-    public View deleteAttachment(@PathVariable("ticketId") long ticketId,
+    public View deleteAttachment(@PathVariable("messageId") long messageId,
             @PathVariable("attachment") String name) {
-        Message ticket = this.ticketDatabase.get(ticketId);
+        Message ticket = this.ticketDatabase.get(messageId);
         if (ticket != null) {
             if (ticket.hasAttachment(name)) {
                 ticket.deleteAttachment(name);
             }
         }
-        return new RedirectView("/ticket/edit/" + ticketId, true);
+        return new RedirectView("/message/edit/" + messageId, true);
     }
 
-    @RequestMapping(value = "edit/{ticketId}", method = RequestMethod.GET)
-    public ModelAndView showEdit(@PathVariable("ticketId") long ticketId,
+    @RequestMapping(value = "edit/{messageId}", method = RequestMethod.GET)
+    public ModelAndView showEdit(@PathVariable("messageId") long messageId,
             Principal principal, HttpServletRequest request) {
-        Message ticket = this.ticketDatabase.get(ticketId);
-        if (ticket == null || 
-                (!request.isUserInRole("ROLE_ADMIN")
+        Message ticket = this.ticketDatabase.get(messageId);
+        if (ticket == null
+                || (!request.isUserInRole("ROLE_ADMIN")
                 && !principal.getName().equals(ticket.getCustomerName()))) {
-            return new ModelAndView(new RedirectView("/ticket/list", true));
+            return new ModelAndView(new RedirectView("/message/list", true));
         }
 
         ModelAndView modelAndView = new ModelAndView("edit");
-        modelAndView.addObject("ticketId", Long.toString(ticketId));
+        modelAndView.addObject("messageId", Long.toString(messageId));
         modelAndView.addObject("ticket", ticket);
 
         Form ticketForm = new Form();
@@ -159,15 +166,15 @@ public class MessageController  {
         return modelAndView;
     }
 
-    @RequestMapping(value = "edit/{ticketId}", method = RequestMethod.POST)
-    public View edit(@PathVariable("ticketId") long ticketId, Form form,
+    @RequestMapping(value = "edit/{messageId}", method = RequestMethod.POST)
+    public View edit(@PathVariable("messageId") long messageId, Form form,
             Principal principal, HttpServletRequest request)
             throws IOException {
-        Message ticket = this.ticketDatabase.get(ticketId);
-        if (ticket == null || 
-                (!request.isUserInRole("ROLE_ADMIN")
+        Message ticket = this.ticketDatabase.get(messageId);
+        if (ticket == null
+                || (!request.isUserInRole("ROLE_ADMIN")
                 && !principal.getName().equals(ticket.getCustomerName()))) {
-            return new RedirectView("/ticket/list", true);
+            return new RedirectView("/message/list", true);
         }
         ticket.setSubject(form.getSubject());
         ticket.setBody(form.getBody());
@@ -183,15 +190,15 @@ public class MessageController  {
             }
         }
         this.ticketDatabase.put(ticket.getId(), ticket);
-        return new RedirectView("/ticket/view/" + ticket.getId(), true);
+        return new RedirectView("/message/view/" + ticket.getId(), true);
     }
 
-    @RequestMapping(value = "delete/{ticketId}", method = RequestMethod.GET)
-    public View deleteTicket(@PathVariable("ticketId") long ticketId) {
-        if (this.ticketDatabase.containsKey(ticketId)) {
-            this.ticketDatabase.remove(ticketId);
+    @RequestMapping(value = "delete/{messageId}", method = RequestMethod.GET)
+    public View deleteTicket(@PathVariable("messageId") long messageId) {
+        if (this.ticketDatabase.containsKey(messageId)) {
+            this.ticketDatabase.remove(messageId);
         }
-        return new RedirectView("/ticket/list", true);
+        return new RedirectView("/message/list", true);
     }
 
 }

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,7 +16,7 @@
             <a href="<c:url value="/user" />">Manage User Accounts</a><br /><br />
         </security:authorize>
 
-        <a href="<c:url value="/ticket/create" />">Create a Ticket</a><br /><br />
+        <a href="<c:url value="/message/create" />">Create a Ticket</a><br /><br />
         <c:choose>
             <c:when test="${fn:length(ticketDatabase) == 0}">
                 <i>There are no tickets in the system.</i>
@@ -23,14 +24,14 @@
             <c:otherwise>
                 <c:forEach items="${ticketDatabase}" var="entry">
                     Ticket ${entry.key}:
-                    <a href="<c:url value="/ticket/view/${entry.key}" />">
+                    <a href="<c:url value="/message/view/${entry.key}" />">
                         <c:out value="${entry.value.subject}" /></a>
                     (customer: <c:out value="${entry.value.customerName}" />)
                     <security:authorize access="hasRole('ADMIN') or principal.username=='${entry.value.customerName}'">            
-                        [<a href="<c:url value="/ticket/edit/${entry.key}" />">Edit</a>]
+                        [<a href="<c:url value="/message/edit/${entry.key}" />">Edit</a>]
                     </security:authorize>
                     <security:authorize access="hasRole('ADMIN')">            
-                        [<a href="<c:url value="/ticket/delete/${entry.key}" />">Delete</a>]
+                        [<a href="<c:url value="/message/delete/${entry.key}" />">Delete</a>]
                     </security:authorize>
                     <br /><br />
                 </c:forEach>

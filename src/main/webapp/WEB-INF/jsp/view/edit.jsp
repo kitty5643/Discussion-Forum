@@ -10,7 +10,7 @@
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
 
-        <h2>Ticket #${ticketId}</h2>
+        <h2>Ticket #${messageId}</h2>
         <form:form method="POST" enctype="multipart/form-data"
                    modelAttribute="ticketForm">   
             <form:label path="subject">Subject</form:label><br/>
@@ -23,7 +23,7 @@
                     <c:forEach items="${ticket.attachments}" var="attachment">
                         <li>
                             <c:out value="${attachment.name}" />
-                            [<a href="<c:url value="/ticket/${ticketId}/delete/${attachment.name}" />">Delete</a>]
+                            [<a href="<c:url value="/message/${messageId}/delete/${attachment.name}" />">Delete</a>]
                         </li>
                     </c:forEach>
                 </ul>
@@ -32,6 +32,6 @@
             <input type="file" name="attachments" multiple="multiple"/><br/><br/>
             <input type="submit" value="Save"/><br/><br/>
         </form:form>
-        <a href="<c:url value="/ticket" />">Return to list tickets</a>
+        <a href="<c:url value="/message" />">Return to list tickets</a>
     </body>
 </html>
