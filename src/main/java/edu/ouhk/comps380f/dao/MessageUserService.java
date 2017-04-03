@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package edu.ouhk.comps380f.dao;
 
 import edu.ouhk.comps380f.model.MessageUser;
@@ -12,23 +17,27 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ *
+ * @author student
+ */
 @Service
 public class MessageUserService implements UserDetailsService {
+
     @Autowired
-    MessageUserRepository messageRepo;
-    
+    MessageUserRepository ticketUserRepo;
+
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        MessageUser messageUser = messageRepo.findByUsername(username);
-        if (messageUser == null) {
+        MessageUser ticketUser = ticketUserRepo.findByUsername(username);
+        if (ticketUser == null) {
             throw new UsernameNotFoundException("User '" + username + "' not found.");
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String role : messageUser.getRoles()) {
+        for (String role : ticketUser.getRoles()) {
             authorities.add(new SimpleGrantedAuthority(role));
         }
-        return new User(messageUser.getUsername(), messageUser.getPassword(), authorities);
+        return new User(ticketUser.getUsername(), ticketUser.getPassword(), authorities);
     }
-    
 }

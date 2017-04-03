@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package edu.ouhk.comps380f.dao;
 
 import edu.ouhk.comps380f.model.MessageUser;
@@ -13,6 +18,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+/**
+ *
+ * @author student
+ */
 @Repository
 public class MessageUserRepositoryImpl implements MessageUserRepository {
 
@@ -24,17 +33,7 @@ public class MessageUserRepositoryImpl implements MessageUserRepository {
         this.dataSource = dataSource;
         this.jdbcOp = new JdbcTemplate(this.dataSource);
     }
-
-    private static final class MessageUserRowMapper implements RowMapper<MessageUser> {
-
-        @Override
-        public MessageUser mapRow(ResultSet rs, int i) throws SQLException {
-            MessageUser user = new MessageUser();
-            user.setUsername(rs.getString("username"));
-            user.setPassword(rs.getString("password"));
-            return user;
-        }
-    }
+    // data access operations
 
     private static final String SQL_INSERT_USER
             = "insert into users (username, password) values (?, ?)";
@@ -52,7 +51,7 @@ public class MessageUserRepositoryImpl implements MessageUserRepository {
                     role);
         }
     }
-
+///////////////////////////////////////////////////////////////
     private static final String SQL_SELECT_ALL_USER
             = "select username, password from users";
     private static final String SQL_SELECT_ROLES
@@ -62,13 +61,13 @@ public class MessageUserRepositoryImpl implements MessageUserRepository {
     public List<MessageUser> findAll() {
         List<MessageUser> users = new ArrayList<>();
         List<Map<String, Object>> rows = jdbcOp.queryForList(SQL_SELECT_ALL_USER);
-
         for (Map<String, Object> row : rows) {
             MessageUser user = new MessageUser();
-            String username = (String) row.get("username");
+            String username = (String) row.get("username"); //obj cast to string
             user.setUsername(username);
             user.setPassword((String) row.get("password"));
-            List<Map<String, Object>> roleRows = jdbcOp.queryForList(SQL_SELECT_ROLES, username);
+            List<Map<String, Object>> roleRows
+                    = jdbcOp.queryForList(SQL_SELECT_ROLES, username);
             for (Map<String, Object> roleRow : roleRows) {
                 user.addRole((String) roleRow.get("role"));
             }
@@ -76,19 +75,35 @@ public class MessageUserRepositoryImpl implements MessageUserRepository {
         }
         return users;
     }
+////////////////////////////////////////////////////////////////
+    private static final class TicketUserRowMapper
+            implements RowMapper<MessageUser> {
+
+        @Override
+        public MessageUser mapRow(ResultSet rs, int i) throws SQLException {
+            MessageUser user = new MessageUser();
+            user.setUsername(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
+            return user;
+        }
+    }
+
     private static final String SQL_SELECT_USER
             = "select username, password from users where username = ?";
+        //query for obj (return 1 user only) (need a row mapper^^^)
 
     @Override
     public MessageUser findByUsername(String username) {
-        MessageUser messageUser = jdbcOp.queryForObject(SQL_SELECT_USER, new MessageUserRowMapper(), username);
-        List<Map<String, Object>> rows = jdbcOp.queryForList(SQL_SELECT_ROLES, username);
+        MessageUser ticketUser = jdbcOp.queryForObject(SQL_SELECT_USER,
+                new TicketUserRowMapper(), username);
+        List<Map<String, Object>> rows = jdbcOp.queryForList(SQL_SELECT_ROLES,
+                username);
         for (Map<String, Object> row : rows) {
-            messageUser.addRole((String) row.get("role"));
+            ticketUser.addRole((String) row.get("role"));
         }
-        return messageUser;
+        return ticketUser;
     }
-
+////////////////////////////////////////////////////////////
     private static final String SQL_DELETE_USER
             = "delete from users where username = ?";
     private static final String SQL_DELETE_ROLES
@@ -96,8 +111,9 @@ public class MessageUserRepositoryImpl implements MessageUserRepository {
 
     @Override
     public void deleteByUsername(String username) {
-        jdbcOp.update(SQL_DELETE_ROLES, username);
+        jdbcOp.update(SQL_DELETE_ROLES, username); //must delete first (foreign key)
         jdbcOp.update(SQL_DELETE_USER, username);
     }
-
+    
+    
 }

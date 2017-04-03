@@ -7,18 +7,15 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class IndexController {
-    
-    @RequestMapping("")
+
+    @RequestMapping("/")
     public View index() {
-        return new RedirectView("/message", true);
+        return new RedirectView("/ticket/list", true);
     }
     
     @RequestMapping("login")
     public String login() {
         return "login";
     }
-    @RequestMapping("index")
-    public String front() {
-        return "index";
-    }
+    
 }

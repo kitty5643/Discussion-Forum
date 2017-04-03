@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Login Page</title>
+        <title>Customer Support Login</title>
     </head>
     <body>
-        <h1>User Login</h1>
-        <c:if test="${loginFailed}">
-            <p>The username and password you entered are not correct. Please try again.</p>
+        <c:if test="${param.error != null}">
+            <p>Login failed.</p>
         </c:if>
-        <form:form method="post" modelAttribute="loginForm" >
-            <form:label path="username">Username:</form:label> <br />
-            <form:input type="text" path="username" /><br /><br />
-            <form:label path="password">Password:</form:label><br />
-            <form:input type="password" path="password" /><br /><br />
+        <c:if test="${param.logout != null}">
+            <p>You have logged out.</p>
+        </c:if>
+        <h2>Customer Support Login</h2>
+        <form action="login" method="POST">
+            <label for="username">Username:</label><br/>
+            <input type="text" id="username" name="username" /><br/><br/>
+            <label for="password">Password:</label><br/>
+            <input type="password" id="password" name="password" /><br/><br/>
+             <input type="checkbox" id="remember-me" name="remember-me" />
+             <label for="remember-me">Remember me</label><br/><br/>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <input type="submit" value="Log In"/>
-        </form:form>
+        </form>
     </body>
 </html>

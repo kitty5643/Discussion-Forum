@@ -1,54 +1,71 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.ouhk.comps380f.model;
 
-import java.util.Date;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-/**
- *
- * @author Kitty
- */
 public class Message {
-    Integer id;
-    String name;
-    String message;
-    Date date;
-    
-    public Message() {
-    } 
 
-    public Integer getId() {
+    private long id;
+    private String customerName;
+    private String subject;
+    private String body;
+    private Map<String, Attachment> attachments = new LinkedHashMap<>();
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public String getMessage() {
-        return message;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public Date getDate() {
-        return date;
+    public String getBody() {
+        return body;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setBody(String body) {
+        this.body = body;
     }
+
+    public Attachment getAttachment(String name) {
+        return this.attachments.get(name);
+    }
+
+    public Collection<Attachment> getAttachments() {
+        return this.attachments.values();
+    }
+
+    public void addAttachment(Attachment attachment) {
+        this.attachments.put(attachment.getName(), attachment);
+    }
+
+    public int getNumberOfAttachments() {
+        return this.attachments.size();
+    }
+
+    public boolean hasAttachment(String name) {
+        return this.attachments.containsKey(name);
+    }
+
+    public Attachment deleteAttachment(String name) {
+        return this.attachments.remove(name);
+    }
+
 }
