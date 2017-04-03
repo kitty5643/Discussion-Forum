@@ -25,7 +25,7 @@ public class MessageUserRepositoryImpl implements MessageUserRepository {
         this.jdbcOp = new JdbcTemplate(this.dataSource);
     }
 
-    private static final class TicketUserRowMapper implements RowMapper<MessageUser> {
+    private static final class MessageUserRowMapper implements RowMapper<MessageUser> {
 
         @Override
         public MessageUser mapRow(ResultSet rs, int i) throws SQLException {
@@ -81,12 +81,12 @@ public class MessageUserRepositoryImpl implements MessageUserRepository {
 
     @Override
     public MessageUser findByUsername(String username) {
-        MessageUser ticketUser = jdbcOp.queryForObject(SQL_SELECT_USER, new TicketUserRowMapper(), username);
+        MessageUser messageUser = jdbcOp.queryForObject(SQL_SELECT_USER, new MessageUserRowMapper(), username);
         List<Map<String, Object>> rows = jdbcOp.queryForList(SQL_SELECT_ROLES, username);
         for (Map<String, Object> row : rows) {
-            ticketUser.addRole((String) row.get("role"));
+            messageUser.addRole((String) row.get("role"));
         }
-        return ticketUser;
+        return messageUser;
     }
 
     private static final String SQL_DELETE_USER
