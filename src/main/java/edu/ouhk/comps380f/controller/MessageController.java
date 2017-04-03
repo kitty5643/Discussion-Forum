@@ -1,6 +1,6 @@
 package edu.ouhk.comps380f.controller;
 
-import edu.ouhk.comps380f.dao.MessageRepository;
+import edu.ouhk.comps380f.dao.MessageUserRepository;
 import edu.ouhk.comps380f.model.Message;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping("message")
 public class MessageController  {
     @Autowired
-    MessageRepository gbEntryRepo; 
+    MessageUserRepository gbEntryRepo; 
     
     @RequestMapping(value={"", "view"})
     public String index(ModelMap model) {
