@@ -1,6 +1,6 @@
 package edu.ouhk.comps380f.controller;
 
-import edu.ouhk.comps380f.dao.MessageUserRepository;
+import edu.ouhk.comps380f.dao.MessageRepository;
 import edu.ouhk.comps380f.model.Message;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +17,11 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping("message")
 public class MessageController  {
     @Autowired
-    MessageUserRepository gbEntryRepo; 
+    MessageRepository messageRepo; 
     
     @RequestMapping(value={"", "view"})
     public String index(ModelMap model) {
-        model.addAttribute("entries", gbEntryRepo.findAll());
+        model.addAttribute("entries", messageRepo.findAll());
         return "Message";
     }
     
@@ -33,20 +33,20 @@ public class MessageController  {
     @RequestMapping(value="add", method=RequestMethod.POST)
     public View addCommentHandle(Message entry) {
         entry.setDate(new Date());
-        gbEntryRepo.create(entry);
+        messageRepo.create(entry);
         return new RedirectView("/message/view", true);
     }
     
     @RequestMapping(value="edit", method=RequestMethod.GET)
     public String editCommentForm(@RequestParam("id") Integer entryId, ModelMap model) {
-        model.addAttribute("entry", gbEntryRepo.findById(entryId));
+        model.addAttribute("entry", messageRepo.findById(entryId));
         return "EditComment";
     }
     
     @RequestMapping(value="edit", method=RequestMethod.POST)
     public View editCommentHandle(Message entry) {
         entry.setDate(new Date());
-        gbEntryRepo.update(entry);
+        messageRepo.update(entry);
         return new RedirectView("/message/view", true);
     }
     
