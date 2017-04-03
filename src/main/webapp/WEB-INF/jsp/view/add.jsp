@@ -4,11 +4,13 @@
         <title>Course Discussion Forum</title>
     </head>
     <body>
-        <c:url var="logoutUrl" value="/logout"/>
-        <form action="${logoutUrl}" method="post">
-            <input type="submit" value="Log out" />
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
+       <security:authorize access="hasAnyRole('USER','ADMIN')">
+            <c:url var="logoutUrl" value="/logout"/>
+            <form action="${logoutUrl}" method="post">
+                <input type="submit" value="Log out" />
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </form>
+        </security:authorize>
 
         <h2>Create a Topic</h2>
         <form:form method="POST" enctype="multipart/form-data"

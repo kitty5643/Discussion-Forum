@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <c:url var="logoutUrl" value="/logout"/>
-        <form action="${logoutUrl}" method="post">
-            <input type="submit" value="Log out" />
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
+       <security:authorize access="hasAnyRole('USER','ADMIN')">
+            <c:url var="logoutUrl" value="/logout"/>
+            <form action="${logoutUrl}" method="post">
+                <input type="submit" value="Log out" />
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </form>
+        </security:authorize>
         <br /><br />
         <a href="<c:url value="/message" />">Return to list topics</a>
         <h2>Users</h2>

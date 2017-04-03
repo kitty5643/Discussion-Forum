@@ -5,11 +5,13 @@
         <title>Course Discussion Forum</title>
     </head>
     <body>
-        <c:url var="logoutUrl" value="/logout"/>
-        <form action="${logoutUrl}" method="post">
-            <input type="submit" value="Log out" />
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
+       <security:authorize access="hasAnyRole('USER','ADMIN')">
+            <c:url var="logoutUrl" value="/logout"/>
+            <form action="${logoutUrl}" method="post">
+                <input type="submit" value="Log out" />
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </form>
+        </security:authorize>
 
         <h2>Lecture</h2>
         <security:authorize access="hasRole('ADMIN')">
@@ -27,8 +29,10 @@
                     <a href="<c:url value="/message/view/${entry.key}" />">
                         <c:out value="${entry.value.subject}" /></a>
                     (User: <c:out value="${entry.value.customerName}" />)
-                    <security:authorize access="hasRole('ADMIN') or principal.username=='${entry.value.customerName}'">            
+                    <security:authorize access="hasRole('ADMIN') "> 
+                        <security:authorize access="principal.username=='${entry.value.customerName}'">
                         [<a href="<c:url value="/message/edit/${entry.key}" />">Edit</a>]
+                        </security:authorize>
                     </security:authorize>
                     <security:authorize access="hasRole('ADMIN')">            
                         [<a href="<c:url value="/message/delete/${entry.key}" />">Delete</a>]

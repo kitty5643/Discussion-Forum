@@ -4,15 +4,19 @@
         <title>Course Discussion Forum</title>
     </head>
     <body>
-        <c:url var="logoutUrl" value="/logout"/>
-        <form action="${logoutUrl}" method="post">
-            <input type="submit" value="Log out" />
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
+        <security:authorize access="hasAnyRole('USER','ADMIN')">
+            <c:url var="logoutUrl" value="/logout"/>
+            <form action="${logoutUrl}" method="post">
+                <input type="submit" value="Log out" />
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </form>
+        </security:authorize>
 
         <h2>Topic #${messageId}: <c:out value="${ticket.subject}" /></h2>
-        <security:authorize access="hasRole('ADMIN') or principal.username=='${ticket.customerName}'">            
-            [<a href="<c:url value="/message/edit/${messageId}" />">Edit</a>]
+        <security:authorize access="hasRole('ADMIN') "> 
+            <security:authorize access="principal.username=='${ticket.customerName}'">       
+                [<a href="<c:url value="/message/edit/${messageId}" />">Edit</a>]
+            </security:authorize>
         </security:authorize>
         <security:authorize access="hasRole('ADMIN')">            
             [<a href="<c:url value="/message/delete/${messageId}" />">Delete</a>]
