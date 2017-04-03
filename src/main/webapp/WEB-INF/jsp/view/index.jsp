@@ -4,7 +4,7 @@
         <title>Course Discussion Forum</title>
     </head>
     <body>
-                
+
         <c:url var="logoutUrl" value="/logout"/>
         <form action="${logoutUrl}" method="post">
             <input type="submit" value="Log out" />
@@ -12,7 +12,10 @@
         </form>
 
         <h2>Index</h2>
-        <p>Hello <security:authentication property="principal.username" />!</p>
+        <p>Hello 
+            <security:authorize access="hasAnyRole('USER','ADMIN')">
+                <security:authentication property="principal.username" />
+            </security:authorize>!</p>
         <ul>
             <li><a href="<c:url value="/message/list"/>">Lecture</a></li>
             <li><a href="<c:url value="/message/list"/>">Lab</a></li>

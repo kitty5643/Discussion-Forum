@@ -23,7 +23,8 @@
     
     <http auto-config="true">
         <intercept-url pattern="/message/delete/**" access="hasRole('ADMIN')" />
-        <intercept-url pattern="/message/**" access="hasAnyRole('USER','ADMIN')" />
+        <intercept-url pattern="/message/create/**" access="hasAnyRole('USER','ADMIN')" />
+       <!-- <intercept-url pattern="/message/**" access="hasAnyRole('USER','ADMIN')" /> -->
         <intercept-url pattern="/user/**" access="permitAll" />
         <form-login login-page="/login"
                     authentication-failure-url="/login?error" />

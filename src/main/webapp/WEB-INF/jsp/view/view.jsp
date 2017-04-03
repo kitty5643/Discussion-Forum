@@ -20,15 +20,18 @@
         <br /><br />
         <i>User Name - <c:out value="${ticket.customerName}" /></i><br /><br />
         <c:out value="${ticket.body}" /><br /><br />
-        <c:if test="${ticket.numberOfAttachments > 0}">
-            Attachments:
-            <c:forEach items="${ticket.attachments}" var="attachment"
-                       varStatus="status">
-                <c:if test="${!status.first}">, </c:if>
-                <a href="<c:url value="/message/${messageId}/attachment/${attachment.name}" />">
-                    <c:out value="${attachment.name}" /></a>
-            </c:forEach><br /><br />
-        </c:if>
+        <security:authorize access="hasAnyRole('USER','ADMIN')">   
+            <c:if test="${ticket.numberOfAttachments > 0}">
+
+                Attachments:
+                <c:forEach items="${ticket.attachments}" var="attachment"
+                           varStatus="status">
+                    <c:if test="${!status.first}">, </c:if>
+                    <a href="<c:url value="/message/${messageId}/attachment/${attachment.name}" />">
+                        <c:out value="${attachment.name}" /></a>
+                </c:forEach><br /><br />
+            </c:if>
+        </security:authorize>
         <a href="<c:url value="/message/list" />">Return to list topics</a>
     </body>
 </html>
