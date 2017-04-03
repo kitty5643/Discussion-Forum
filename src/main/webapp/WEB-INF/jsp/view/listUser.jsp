@@ -7,11 +7,11 @@
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </form>
         <br /><br />
-        <a href="<c:url value="/ticket" />">Return to list tickets</a>
+        <a href="<c:url value="/message" />">Return to list tickets</a>
         <h2>Users</h2>
         <a href="<c:url value="/user/create" />">Create a User</a><br /><br />
         <c:choose>
-            <c:when test="${fn:length(ticketUsers) == 0}">
+            <c:when test="${fn:length(messageUsers) == 0}">
                 <i>There are no users in the system.</i>
             </c:when>
             <c:otherwise>
@@ -19,7 +19,7 @@
                     <tr>
                         <th>Username</th><th>Password</th><th>Roles</th><th>Action</th>
                     </tr>
-                    <c:forEach items="${ticketUsers}" var="user">
+                    <c:forEach items="${messageUsers}" var="user">
                         <tr>
                             <td>${user.username}</td><td>${user.password}</td>
                             <td>

@@ -12,7 +12,7 @@
     <b:bean id="dataSource" 
             class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <b:property name="driverClassName" value="org.apache.derby.jdbc.ClientDriver" />
-        <b:property name="url" value="jdbc:derby://localhost:1527/account" />
+        <b:property name="url" value="jdbc:derby://localhost:1527/custsupport" />
         <b:property name="username" value="nbuser" />
         <b:property name="password" value="nbuser" />
     </b:bean> 
@@ -24,7 +24,7 @@
     <http auto-config="true">
         <intercept-url pattern="/message/delete/**" access="hasRole('ADMIN')" />
         <intercept-url pattern="/message/**" access="hasAnyRole('USER','ADMIN')" />
-        <intercept-url pattern="/user/**" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/user/**" access="permitAll" />
         <form-login login-page="/login"
                     authentication-failure-url="/login?error" />
         <logout logout-success-url="/login?logout"
