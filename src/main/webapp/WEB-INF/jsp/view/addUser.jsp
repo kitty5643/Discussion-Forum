@@ -4,14 +4,24 @@
         <title>Course Discussion Forum</title>
     </head>
     <body>
+        <security:authorize access="!hasAnyRole('USER','ADMIN')">
+            <c:url var="logoutUrl" value="/login"/>
+            <form action="${logoutUrl}" method="post">
+                <input type="submit" value="Log in" />
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
+            </form>
+            <h2>Register</h2>
+        </security:authorize>
         <security:authorize access="hasAnyRole('USER','ADMIN')">
             <c:url var="logoutUrl" value="/logout"/>
             <form action="${logoutUrl}" method="post">
                 <input type="submit" value="Log out" />
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             </form>
+
+            <h2>Create a User</h2>
         </security:authorize>
-        <h2>Create a User</h2>
         <form:form method="POST" enctype="multipart/form-data"
                    modelAttribute="messageUser">
             <form:label path="username">Username</form:label><br/>

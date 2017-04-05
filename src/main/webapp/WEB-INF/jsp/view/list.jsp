@@ -5,6 +5,16 @@
         <title>Course Discussion Forum</title>
     </head>
     <body>
+        <security:authorize access="!hasAnyRole('USER','ADMIN')">
+            <a href="<c:url value="/user/create" />">Register</a>
+            <c:url var="logoutUrl" value="/login"/>
+            <form action="${logoutUrl}" method="post">
+                <input type="submit" value="Log in" />
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
+            </form>
+
+        </security:authorize>
        <security:authorize access="hasAnyRole('USER','ADMIN')">
             <c:url var="logoutUrl" value="/logout"/>
             <form action="${logoutUrl}" method="post">
@@ -36,9 +46,11 @@
                     </security:authorize>
                     <security:authorize access="hasRole('ADMIN')">            
                         [<a href="<c:url value="/message/delete/${entry.key}" />">Delete</a>]
+                       
                     </security:authorize>
-                    
+                    <br />  
                 </c:forEach>
+                         
             </c:otherwise>
         </c:choose>
                     
