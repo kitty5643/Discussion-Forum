@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
@@ -25,41 +26,23 @@ public class MessageController {
 
     private volatile long TICKET_ID_SEQUENCE = 1;
     private Map<Long, Message> ticketDatabase = new LinkedHashMap<>();
-
-    @RequestMapping(value = {"list"}, method = RequestMethod.GET)
-    public String list(ModelMap model) {
-        model.addAttribute("ticketDatabase", ticketDatabase);
-        return "list";
-    }
-
-    @RequestMapping(value = {"", "index"}, method = RequestMethod.GET)
-    public String index(ModelMap model) {
-        // model.addAttribute("ticketDatabase", ticketDatabase);
-        return "index";
-    }
-
-    @RequestMapping(value = "view/{messageId}", method = RequestMethod.GET)
-    public ModelAndView view(@PathVariable("messageId") long messageId) {
-        Message ticket = this.ticketDatabase.get(messageId);
-        if (ticket == null) {
-            return new ModelAndView(new RedirectView("/message/list", true));
-        }
-        ModelAndView modelAndView = new ModelAndView("view");
-        modelAndView.addObject("messageId", Long.toString(messageId));
-        modelAndView.addObject("ticket", ticket);
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "create", method = RequestMethod.GET)
-    public ModelAndView create() {
-        return new ModelAndView("add", "ticketForm", new Form());
-    }
+    // private String category[]=new String[]{"lecture", "lab", "other"};
+    private Message msg = new Message();
 
     public static class Form {
 
         private String subject;
         private String body;
+        private String category;
         private List<MultipartFile> attachments;
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
+        }
 
         public String getSubject() {
             return subject;
@@ -86,7 +69,52 @@ public class MessageController {
         }
     }
 
-    @RequestMapping(value = "create", method = RequestMethod.POST)
+    @RequestMapping(value = {"{category}/list"}, method = RequestMethod.GET)
+    public String list(@PathVariable("category") String category) {
+
+        ModelAndView modelAndView = new ModelAndView("view");
+        //  modelAndView.addObject("category", category);
+        return "list";
+    }
+
+    /*public String list(ModelMap model) {
+        model.addAttribute("ticketDatabase", ticketDatabase);
+        return "list";
+    } */
+
+    @RequestMapping(value = {"", "index"}, method = RequestMethod.GET)
+    public ModelAndView index() {
+        //System.out.println("1111111111" + form.getCategory());
+        return new ModelAndView("index", "ticketForm", new Form());
+    }
+   
+    @RequestMapping(value = {"", "index"}, method = RequestMethod.POST)
+    public Object index(Form form) throws IOException {
+        //Message ticket = new Message();
+        msg.setCategory(form.getCategory());
+        System.out.println("1111111111" + form.getCategory());
+        return msg;
+    }
+
+    @RequestMapping(value = "{category}/view/{messageId}", method = RequestMethod.GET)
+    public ModelAndView view(@PathVariable("messageId") long messageId, @PathVariable("category") String category) {
+        Message ticket = this.ticketDatabase.get(messageId);
+        if (ticket == null) {
+            return new ModelAndView(new RedirectView("/message/list", true));
+        }
+        ModelAndView modelAndView = new ModelAndView("view");
+        modelAndView.addObject("messageId", Long.toString(messageId));
+        modelAndView.addObject("ticket", ticket);
+        modelAndView.addObject("msg", msg);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "{category}/create", method = RequestMethod.GET)
+    public ModelAndView create() {
+        return new ModelAndView("add", "ticketForm", new Form());
+    }
+
+    @RequestMapping(value = "{category}/create", method = RequestMethod.POST)
     public View create(Form form, Principal principal) throws IOException {
         Message ticket = new Message();
         ticket.setId(this.getNextMessageId());
@@ -105,7 +133,7 @@ public class MessageController {
             }
         }
         this.ticketDatabase.put(ticket.getId(), ticket);
-        return new RedirectView("/message/view/" + ticket.getId(), true);
+        return new RedirectView("/message/{category}/view/" + ticket.getId(), true);
     }
 
     private synchronized long getNextMessageId() {

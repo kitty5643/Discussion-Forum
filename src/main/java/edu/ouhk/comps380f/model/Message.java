@@ -11,7 +11,16 @@ public class Message {
     private String subject;
     private String body;
     private Map<String, Attachment> attachments = new LinkedHashMap<>();
+    private String category;
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    
     public long getId() {
         return id;
     }
@@ -32,6 +41,7 @@ public class Message {
         return subject;
     }
 
+   
     public void setSubject(String subject) {
         this.subject = subject;
     }

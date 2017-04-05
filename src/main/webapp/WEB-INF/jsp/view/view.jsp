@@ -21,7 +21,7 @@
             </form>
         </security:authorize>
 
-        <h2>Topic #${messageId}: <c:out value="${ticket.subject}" /></h2>
+        <h2><c:out value="${category}" /> Topic #${messageId}: <c:out value="${ticket.subject}" /></h2>
         <security:authorize access="hasRole('ADMIN') "> 
             <security:authorize access="principal.username=='${ticket.customerName}'">       
                 [<a href="<c:url value="/message/edit/${messageId}" />">Edit</a>]
@@ -45,6 +45,6 @@
                 </c:forEach><br /><br />
             </c:if>
         </security:authorize>
-        <a href="<c:url value="/message/list" />">Return to list topics</a>
+        <a href="<c:url value="/message/${category}/list" />">Return to list topics</a>
     </body>
 </html>

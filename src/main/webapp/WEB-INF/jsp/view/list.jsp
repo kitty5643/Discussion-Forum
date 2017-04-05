@@ -23,12 +23,12 @@
             </form>
         </security:authorize>
 
-        <h2>Lecture</h2>
+        <h2><c:out value="${category}" /></h2>
         <security:authorize access="hasRole('ADMIN')">
-            <a href="<c:url value="/user" />">Manage User Accounts</a><br /><br />
+            <a href="<c:url value="/user" />">Manage User Accounts</a> | <a href="<c:url value="/addPoll" />">Create new forum poll</a> | 
         </security:authorize>
 
-        <a href="<c:url value="/message/create" />">Create a Topic</a><br /><br />
+        <a href="<c:url value="/message/${category}/create" />">Create a Topic</a><br /><br />
         <c:choose>
             <c:when test="${fn:length(ticketDatabase) == 0}">
                 <i>There are no topics in the system.</i>

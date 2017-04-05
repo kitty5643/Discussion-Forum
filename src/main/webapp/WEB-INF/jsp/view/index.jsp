@@ -24,10 +24,20 @@
             <security:authorize access="hasAnyRole('USER','ADMIN')">
                 <security:authentication property="principal.username" />
             </security:authorize>!</p>
-        <ul>
-            <li><a href="<c:url value="/message/list"/>">Lecture</a></li>
-            <li><a href="<c:url value="/message/list"/>">Lab</a></li>
-            <li><a href="<c:url value="/message/list"/>">Other</a></li>
-        </ul>
-    </body>
-</html>
+            <form:form method="POST" enctype="multipart/form-data"
+                       modelAttribute="ticketForm">
+            <ul>
+                <li><a href="<c:url value="/message/lecture/list"/>">
+                        Lecture
+                        <form:hidden path="category" value="Lecture"/></a></li> 
+                <!--input type="input" id="category" name="category" value="lecture"/></a></li-->
+                <li><a href="<c:url value="/message/lab/list"/>">
+                        Lab
+                        <!--form:hidden path="category" value="lab"/></a></li--> 
+                        <li><a href="<c:url value="/message/other/list"/>">
+                                Other
+                                <!--form:hidden path="category" value="other"/></a></li-->
+                                </ul>
+                            </form:form>
+                            </body>
+                            </html>
